@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="colorLightGrayMore">#aaaaaa</color>
+	<color name="colorLightGray">#666666</color>
+
+	<color name="colorRed">#e91e63</color>
+	<color name="colorAccent">#9c27b0</color>
+	<color name="deep_purple">#673ab7</color>
+</resources>

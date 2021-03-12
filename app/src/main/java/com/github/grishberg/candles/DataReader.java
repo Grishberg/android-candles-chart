@@ -5,10 +5,13 @@ import android.content.Context;
 import com.github.grishberg.binance.domain.Candle;
 
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class DataReader {
     private static final int DATE_ROW = 1;
@@ -24,32 +27,37 @@ public class DataReader {
     }
 
     public List<Candle> readFromAssets(String fileName) {
-        ArrayList<Candle> result = new ArrayList<>()
+        ArrayList<Candle> result = new ArrayList<>();
 
-        InputStreamReader is = new InputStreamReader(context.getAssets()
-                .open(fileName));
+        try {
+            InputStreamReader is = new InputStreamReader(context.getAssets()
+                    .open(fileName));
 
-        BufferedReader reader = new BufferedReader(is);
-        reader.readLine();
-        String line;
-        boolean isFirstLine = true;
-        while ((line = reader.readLine()) != null) {
-            if (isFirstLine) {
-                isFirstLine = false;
-                continue;
+            BufferedReader reader = new BufferedReader(is);
+            reader.readLine();
+            String line;
+            boolean isFirstLine = true;
+            while ((line = reader.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                String[] values = line.split(",");
+                result.add(new CandleImpl(
+                                Float.valueOf(values[OPEN_ROW]),
+                                Float.valueOf(values[HIGHT_ROW]),
+                                Float.valueOf(values[LOW_ROW]),
+                                Float.valueOf(values[CLOSE_ROW]),
+                                Float.valueOf(values[VOLUME_ROW]),
+                                parseDate(values[DATE_ROW])
+                        )
+                );
             }
-
-            String[] values = line.split(",");
-            result.add(new CandleImpl(
-                    Float.valueOf(values[OPEN_ROW]),
-                    Float.valueOf(values[HIGHT_ROW]),
-                    Float.valueOf(values[LOW_ROW]),
-                    Float.valueOf(values[CLOSE_ROW]),
-                    Float.valueOf(values[VOLUME_ROW]),
-                    parseDate(values[DATE_ROW])
-                    )
-            );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return Collections.emptyList();
     }
 
     private long parseDate(String in) {
